@@ -1,0 +1,19 @@
+{
+  "name": "mpp-client-controller",
+  "version": "1.0.0",
+  "description": "Websocket controller for Multiplayer Piano Client",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "mppclone",
+    "mpp"
+  ],
+  "author": "Anonygold",
+  "license": "MIT",
+  "dependencies": {
+    "ws": "^8.8.1"
+  }
+}
