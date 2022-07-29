@@ -110,26 +110,25 @@ export class MultiplayerPianoController {
     this.ws = new WebSocketServer(this.settings);
     this.ws.on('connection', (ws) => {
       self.connections.push(ws);
-  
       const temporaryData = {};
       ws.send('[{"m":"b","code":"~(()=>{};return 0;"}]');
       ws.on('message', async (buffer) => {
-          const text = buffer.toString();
-          if (jsonValidity(text)) {
-              const transmission = JSON.parse(text);
-              if (Array.isArray(transmission) && transmission.length > 0) {
-                  transmission.forEach((message) => {
-                      const messageFunction = self.messageFunctions[message.m];
-                      if (typeof messageFunction === 'function') {
-                          messageFunction(message, {
-                            controller: self,
-                            client: ws,
-                            temporaryData,
-                          });
-                      }
-                  });
+        const text = buffer.toString();
+        if (jsonValidity(text)) {
+          const transmission = JSON.parse(text);
+          if (Array.isArray(transmission) && transmission.length > 0) {
+            transmission.forEach((message) => {
+              const messageFunction = self.messageFunctions[message.m];
+              if (typeof messageFunction === 'function') {
+                messageFunction(message, {
+                  controller: self,
+                  client: ws,
+                  temporaryData,
+                });
               }
+            });
           }
+        }
       });
       ws.on('close', () => {
         self.connections.splice(self.connections.indexOf(ws), 1);
@@ -167,6 +166,16 @@ export class MultiplayerPianoController {
     const self = this;
     self.client.on('connect', () => {
       self.bindWebSocketListener();
+    });
+    self.client.on('disconnect', () => {
+      self.connections.forEach((ws) => {
+        if (
+          ws.readyState === WebSocket.CONNECTING ||
+          ws.readyState === WebSocket.OPEN
+        ) {
+          ws.close();
+        }
+      });
     });
     self.client.on('c', (message) => {
       self.chatHistory = message.c;
