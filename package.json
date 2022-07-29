@@ -1,7 +1,7 @@
 {
   "name": "mpp-client-controller",
   "version": "1.0.0",
-  "description": "Websocket controller for Multiplayer Piano Client",
+  "description": "Proof of concept WebSocket server for the Multiplayer Piano Client",
   "main": "index.js",
   "type": "module",
   "scripts": {
